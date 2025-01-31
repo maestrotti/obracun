@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obračun Plate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Obračun Plate</h2>
+        <label>Bruto satnica:</label>
+        <input type="number" id="brutoSatnica" step="0.01">
+        
+        <label>Godine staža:</label>
+        <input type="number" id="godineStaza">
+        
+        <label>Ostali dodaci (%):</label>
+        <input type="number" id="dodaci" step="0.01" placeholder="Nije obavezno">
+        
+        <label>Broj sati:</label>
+        <input type="number" id="brojSati">
+        
+        <label>Lični odbitak:</label>
+        <input type="number" id="licniOdbitak">
+        
+        <button onclick="izracunajPlatu()">Izračunaj</button>
+        
+        <div class="result" id="rezultat"></div>
+    </div>
+
+    <script>
+        function izracunajPlatu() {
+            let brutoSatnica = parseFloat(document.getElementById("brutoSatnica").value);
+            let godineStaza = parseInt(document.getElementById("godineStaza").value) || 0;
+            let dodaci = parseFloat(document.getElementById("dodaci").value) || 0;
+            let brojSati = parseInt(document.getElementById("brojSati").value);
+            let licniOdbitak = parseFloat(document.getElementById("licniOdbitak").value);
+            
+            let minuliRad = godineStaza * 0.6; // Procenat od minulog rada
+            let ukupniDodaci = dodaci + minuliRad;
+            let brutoPlata = brutoSatnica * brojSati * (1 + ukupniDodaci / 100);
+            let netoPlata = brutoPlata * 0.69; // Odbitak 31%
+            let osnovicaPorez = (netoPlata - licniOdbitak) * 0.1;
+            let isplataNaRacun = netoPlata - osnovicaPorez;
+            
+            document.getElementById("rezultat").innerHTML = `
+                Bruto plata: ${brutoPlata.toFixed(2)} KM<br>
+                Neto plata: ${netoPlata.toFixed(2)} KM<br>
+                Osnovica za porez: ${osnovicaPorez.toFixed(2)} KM<br>
+                Isplata na račun: ${isplataNaRacun.toFixed(2)} KM
+            `;
+        }
+    </script>
+</body>
+</html>
